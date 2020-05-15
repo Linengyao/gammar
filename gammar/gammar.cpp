@@ -2,10 +2,55 @@
 //
 
 #include <iostream>
+#include <opencv.hpp>
 
+using namespace cv;
+using namespace std;
+
+float Lut[256] = { 0 };
+
+
+void LutBuild(float gammar)
+{
+	//建立Lut图
+	for (int i = 0; i < 256; i++)
+	{
+		Lut[i] = pow((i*1.0 / 255), gammar) * 255;
+	}
+}
+void Gammar(Mat srcMat)
+{
+	//srcMat.copyTo(dstMat);
+	int height = srcMat.rows; //行数
+	int width = srcMat.cols;//每行元素数量
+	for (int j = 0; j < height; j++)
+	{
+		for (int i = 0; i < width; i++)
+		{
+			//------开始处理每个像素---------
+						
+			srcMat.at<uchar>(j, i) = Lut[srcMat.at<uchar>(j, i)];
+		}//单行处理结束
+	}
+
+
+
+
+
+}
 int main()
 {
-    std::cout << "Hello World!\n";
+
+	cv::Mat srcMat = imread("E:\\课程\\大二下\\数字图像处理\\face.jpg",0);
+
+	LutBuild(0.45);
+	Gammar(srcMat);
+	imshow("srcMat", srcMat);
+
+	waitKey(0);
+
+
+	return 0;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
